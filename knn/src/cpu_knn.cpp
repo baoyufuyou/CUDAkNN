@@ -1,30 +1,25 @@
 /*
  * =====================================================================================
- *       Filename:  main.cpp
- *    Description:  This file contains some basic calls to other functions and
- *    objects defined in the other files of this code
- *        Created:  2015-02-02 10:35
+ *       Filename:  cpu_knn.cpp
+ *    Description:  
+ *        Created:  2015-02-02 12:16
  *         Author:  Tiago Lobato Gimenes        (tlgimenes@gmail.com)
  * =====================================================================================
  */
 
 ////////////////////////////////////////////////////////////////////////////////////////
 
-#include "cuda_kd_tree.hpp"
-#include "cuda_knn.hpp"
-#include "error.hpp"
-#include "utils.hpp"
+#include "cpu_knn.hpp"
 
 ////////////////////////////////////////////////////////////////////////////////////////
 
 /**
- * Contains some basic call to other function of the program
+ * Implementation of the method of the supper class KNN  
  * */
-int main(int argc, char* argv[])
+template <typename T>
+std::vector<T>& CPUKNN<T>::find(uint query, uint k)
 {
-    TIME_BETWEEN(CUDAKDTree tree;) // Macro for evaluating the time for executing the code between
-
-    return 0;
+    
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////

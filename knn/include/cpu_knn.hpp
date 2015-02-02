@@ -1,16 +1,16 @@
 /*
  * =====================================================================================
- *       Filename:  cuda_knn.hpp
+ *       Filename:  cpu_knn.hpp
  *    Description:  
- *        Created:  2015-02-02 11:28
+ *        Created:  2015-02-02 11:59
  *         Author:  Tiago Lobato Gimenes        (tlgimenes@gmail.com)
  * =====================================================================================
  */
 
 ////////////////////////////////////////////////////////////////////////////////////////
 
-#ifndef CUDA_KNN_HPP
-#define CUDA_KNN_HPP
+#ifndef CPU_KNN_HPP
+#define CPU_KNN_HPP
 
 ////////////////////////////////////////////////////////////////////////////////////////
 
@@ -19,10 +19,10 @@
 ////////////////////////////////////////////////////////////////////////////////////////
 
 template <typename T>
-class CUDAKNN : public KNN<T>
+class CPUKNN : public KNN<T>
 {
     public:
-        inline CUDAKNN(uint dim, std::vector<T>& data) : KNN<T>(dim, data) {};
+        inline CPUKNN(uint dim, const std::vector<T> data) : KNN<T>(dim, data) {}
 
         /**
          * Implementation of the method of the supper class KNN  
@@ -32,11 +32,11 @@ class CUDAKNN : public KNN<T>
 
 ////////////////////////////////////////////////////////////////////////////////////////
 
-template class CUDAKNN<float>;
+template class CPUKNN<float>;
 
 ////////////////////////////////////////////////////////////////////////////////////////
 
-#endif /* !CUDA_KNN_HPP */
+#endif /* !CPU_KNN_HPP */
 
 ////////////////////////////////////////////////////////////////////////////////////////
 

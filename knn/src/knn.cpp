@@ -1,30 +1,33 @@
 /*
  * =====================================================================================
- *       Filename:  main.cpp
- *    Description:  This file contains some basic calls to other functions and
- *    objects defined in the other files of this code
- *        Created:  2015-02-02 10:35
+ *       Filename:  knn.cpp
+ *    Description:  
+ *        Created:  2015-02-02 12:13
  *         Author:  Tiago Lobato Gimenes        (tlgimenes@gmail.com)
  * =====================================================================================
  */
 
 ////////////////////////////////////////////////////////////////////////////////////////
 
-#include "cuda_kd_tree.hpp"
-#include "cuda_knn.hpp"
+#include "knn.hpp"
+
 #include "error.hpp"
-#include "utils.hpp"
 
 ////////////////////////////////////////////////////////////////////////////////////////
 
-/**
- * Contains some basic call to other function of the program
- * */
-int main(int argc, char* argv[])
+template <typename T>
+inline void KNN<T>::reset(uint dim, std::vector<T>& data)
 {
-    TIME_BETWEEN(CUDAKDTree tree;) // Macro for evaluating the time for executing the code between
+    _dim = dim;
+    _data = data;
+}
 
-    return 0;
+////////////////////////////////////////////////////////////////////////////////////////
+
+template <typename T>
+std::vector<uint>& KNN<T>::find(uint query, uint k)
+{
+    FATAL_ERROR("Cannot find from raw knn");
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////
