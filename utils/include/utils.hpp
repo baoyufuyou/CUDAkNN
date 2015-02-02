@@ -17,6 +17,7 @@
 #include <chrono>
 #include <string>
 #include <iostream>
+#include <vector>
 
 ////////////////////////////////////////////////////////////////////////////////////////
 // Types
@@ -40,6 +41,11 @@ static std::chrono::high_resolution_clock::time_point t1;
     std::cout << "---------------------------------------------------------" << std::endl; \
     std::cout << #code << std::endl; \
     std::cout << "---------------------------------------------------------" << std::endl;
+
+////////////////////////////////////////////////////////////////////////////////////////
+
+template <typename T>
+extern std::vector<T>& gen_random_data(uint n_points, uint dimention);
 
 ////////////////////////////////////////////////////////////////////////////////////////
 

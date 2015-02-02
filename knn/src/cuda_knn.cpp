@@ -19,7 +19,7 @@
  * Implementation of the method of the supper class KNN  
  * */
 template <typename T>
-std::vector<T>& CUDAKNN<T>::find(uint query, uint k)
+void CUDAKNN<T>::find(uint query, uint k, std::vector<uint>& knn)
 {
 
 }

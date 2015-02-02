@@ -17,13 +17,14 @@
 #include <vector>
 
 #include "utils.hpp"
+#include "error.hpp"
 
 ////////////////////////////////////////////////////////////////////////////////////////
 
 template <typename T>
 class KNN 
 {
-    private:
+    protected:
         uint _dim; // Number of dimentions of the data
         std::vector<T>& _data; // Data
     
@@ -33,7 +34,10 @@ class KNN
          * @arg1: dimention of the space that the data is defined
          * @arg2: array of the data 
          * */
-        inline KNN(uint dim, std::vector<T>& data) : _dim(dim), _data(data) {};
+        inline KNN(uint dim, std::vector<T>& data) : _dim(dim), _data(data) {
+            ASSERT_FATAL_ERROR((_data.size() % _dim) == 0, \
+                    "data size must devide number of dimentions");
+        };
 
         /**
          * Resets the data and its dimention 
@@ -44,11 +48,11 @@ class KNN
          * Returns the k-nearest neighbors of query  
          * @arg1: index in the vector data of the query
          * @arg2: k neighbors to find
-         * @return: vector with indices of k nearest neighbors
+         * @arg3: vector that will return the indices of the k nearest neighbors
          * WARNING: the query index is not _data[query] but 
          * _data[query * dim], as well as for the return vector
          * */
-        virtual std::vector<uint>& find(uint query, uint k);
+        virtual void find(uint query, uint k, std::vector<uint>& knn);
 
         /**
          * Gets  

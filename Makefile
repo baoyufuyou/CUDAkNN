@@ -5,7 +5,7 @@
 #
 
 CC=nvcc					# Compiler
-C_FLAGS=-g -std=c++11	# C-Compiler flags
+C_FLAGS=-std=c++11 -g #-DNDEBUG # C-Compiler flags
 NV_FLAGS=-G				# Nvidia compiler flags
 
 SRC=$(wildcard *.cpp)	# Source files in this folder

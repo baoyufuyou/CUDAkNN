@@ -27,7 +27,7 @@ class CUDAKNN : public KNN<T>
         /**
          * Implementation of the method of the supper class KNN  
          * */
-        std::vector<T>& find(uint query, uint k);
+        void find(uint query, uint k, std::vector<uint>& knn);
 };
 
 ////////////////////////////////////////////////////////////////////////////////////////

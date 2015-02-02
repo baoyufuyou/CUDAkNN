@@ -11,8 +11,6 @@
 
 #include "knn.hpp"
 
-#include "error.hpp"
-
 ////////////////////////////////////////////////////////////////////////////////////////
 
 template <typename T>
@@ -20,12 +18,14 @@ inline void KNN<T>::reset(uint dim, std::vector<T>& data)
 {
     _dim = dim;
     _data = data;
+    ASSERT_FATAL_ERROR((_data.size() % _dim) == 0, \
+            "data size must devide number of dimentions");
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////
 
 template <typename T>
-std::vector<uint>& KNN<T>::find(uint query, uint k)
+void KNN<T>::find(uint query, uint k, std::vector<uint>& knn)
 {
     FATAL_ERROR("Cannot find from raw knn");
 }
