@@ -16,12 +16,18 @@ This software is Linux supported only, but it might works in Windows as well
 - Git 2.2.2
 
 **Linux**
+
 *Compiling*
+
 Open a terminal and type
+
   git clone https://github.com/tlgimenes/CUDAkNN.git
+
 You shoud now be downloading the source code. After finished downloading, type
+
   cd CUDAkNN
   make
+
 Congratulations ! You are done !
 
 TODO
