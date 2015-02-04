@@ -14,7 +14,13 @@
 
 ////////////////////////////////////////////////////////////////////////////////////////
 
+#define CPP99 199711L
+
+////////////////////////////////////////////////////////////////////////////////////////
+
+#if __cplusplus > CPP99
 #include <chrono>
+#endif
 #include <string>
 #include <iostream>
 #include <vector>
@@ -27,11 +33,14 @@ typedef unsigned short int usint;
 
 ////////////////////////////////////////////////////////////////////////////////////////
 // Global variables for time_point
+#if __cplusplus > CPP99
 static std::chrono::high_resolution_clock::time_point t0;
 static std::chrono::high_resolution_clock::time_point t1;
+#endif
 
 ////////////////////////////////////////////////////////////////////////////////////////
 // Macros for time
+#if __cplusplus > CPP99
 #define TIME_BETWEEN(code) \
     t0 = std::chrono::high_resolution_clock::now(); \
     code \
@@ -41,6 +50,11 @@ static std::chrono::high_resolution_clock::time_point t1;
     std::cout << "---------------------------------------------------------" << std::endl; \
     std::cout << #code << std::endl; \
     std::cout << "---------------------------------------------------------" << std::endl;
+#else
+#include "error.hpp"
+#define TIME_BETWEEN(code) WARNING_ERROR("TIME_BETWEEN needs at least C++11 compliant compiler")
+#endif
+
 
 ////////////////////////////////////////////////////////////////////////////////////////
 

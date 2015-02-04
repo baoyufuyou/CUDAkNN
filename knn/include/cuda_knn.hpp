@@ -22,12 +22,12 @@ template <typename T>
 class CUDAKNN : public KNN<T>
 {
     public:
-        inline CUDAKNN(uint dim, std::vector<T>& data) : KNN<T>(dim, data) {};
+        CUDAKNN(uint dim, std::vector<T>& data);
+        CUDAKNN(uint dim, uint data_size_byte, T* _dev_data);
 
-        /**
-         * Implementation of the method of the supper class KNN  
-         * */
-        void find(uint query, uint k, std::vector<uint>& knn);
+    protected:
+        T* _dev_data; // data vector in device memory;
+        uint _data_size_byte; // size of data in bytes loaded into device
 };
 
 ////////////////////////////////////////////////////////////////////////////////////////
