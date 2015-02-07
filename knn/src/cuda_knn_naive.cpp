@@ -18,30 +18,6 @@
 ////////////////////////////////////////////////////////////////////////////////////////
 
 template <typename T>
-CUDAKNNNaive<T>::CUDAKNNNaive(uint dim, std::vector<T>& data) 
-    : 
-        CUDAKNN<T>(dim, data)
-{
-    _dev_sort_byte = (this->_data.size() / this->_dim) * sizeof(struct sort_t<T>);
-
-    CUDA_ERR(cudaMalloc((void**)&_dev_sort, _dev_sort_byte));
-}
-
-////////////////////////////////////////////////////////////////////////////////////////
-
-template <typename T>
-CUDAKNNNaive<T>::CUDAKNNNaive(uint dim, uint data_size_byte, T* _dev_data)
-    :
-        CUDAKNN<T>(dim, data_size_byte, _dev_data)
-{
-    _dev_sort_byte = (this->_data.size() / this->_dim) * sizeof(struct sort_t<T>);
-
-    CUDA_ERR(cudaMalloc((void**)&_dev_sort, _dev_sort_byte));
-}
-
-////////////////////////////////////////////////////////////////////////////////////////
-
-template <typename T>
 void CUDAKNNNaive<T>::find(uint query, uint k, std::vector<uint>& knn)
 {
     uint N_threads = this->_data.size() / this->_dim;
@@ -52,7 +28,10 @@ void CUDAKNNNaive<T>::find(uint query, uint k, std::vector<uint>& knn)
 
  //   comp_dist<float>(blocksPerGrid, threadsPerBlock, this->_dev_data, 
  //           this->_dim, query, this->_dev_sort);
-    comp_dist<float>(N_threads, this->_dev_data, this->_dim, query, this->_dev_sort);
+    comp_dist<T>(N_threads, this->_dev_data, this->_dim, query, this->_dev_sort);
+
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////
+
+

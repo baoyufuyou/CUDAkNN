@@ -16,6 +16,8 @@
 
 #include "cuda_knn.hpp"
 
+#include <cuda_runtime.h>
+
 ////////////////////////////////////////////////////////////////////////////////////////
 
 template <typename T>
@@ -47,6 +49,30 @@ class CUDAKNNNaive : public CUDAKNN<T>
 ////////////////////////////////////////////////////////////////////////////////////////
 
 template class CUDAKNNNaive<float>;
+
+////////////////////////////////////////////////////////////////////////////////////////
+
+template <typename T>
+CUDAKNNNaive<T>::CUDAKNNNaive(uint dim, std::vector<T>& data)
+    :
+        CUDAKNN<T>(dim, data)
+{
+    _dev_sort_byte = (this->_data.size() / this->_dim) * sizeof(struct sort_t<T>);
+
+    CUDA_ERR(cudaMalloc((void**)&_dev_sort, _dev_sort_byte));
+}
+
+////////////////////////////////////////////////////////////////////////////////////////
+
+template <typename T>
+CUDAKNNNaive<T>::CUDAKNNNaive(uint dim, uint data_size_byte, T* _dev_data)
+    :
+        CUDAKNN<T>(dim, data_size_byte, _dev_data)
+{
+    _dev_sort_byte = (this->_data.size() / this->_dim) * sizeof(struct sort_t<T>);
+
+    CUDA_ERR(cudaMalloc((void**)&_dev_sort, _dev_sort_byte));
+}
 
 ////////////////////////////////////////////////////////////////////////////////////////
 
