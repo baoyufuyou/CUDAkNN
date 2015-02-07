@@ -50,8 +50,9 @@ void CUDAKNNNaive<T>::find(uint query, uint k, std::vector<uint>& knn)
 
     query = query * this->_dim;
 
-    comp_dist<float>(blocksPerGrid, threadsPerBlock, this->_dev_data, 
-            this->_dim, query, this->_dev_sort);
+ //   comp_dist<float>(blocksPerGrid, threadsPerBlock, this->_dev_data, 
+ //           this->_dim, query, this->_dev_sort);
+    comp_dist<float>(N_threads, this->_dev_data, this->_dim, query, this->_dev_sort);
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////

@@ -19,7 +19,7 @@
  * @arg3: return array containing distances from each data to query 
  * */
 template <typename T> 
-__global__ void comp_dist(T* dev_data, uint dim, uint query, struct sort_t<T>* dev_sort)
+__global__ void __comp_dist(T* dev_data, uint dim, uint query, struct sort_t<T>* dev_sort)
 {
     uint k = blockDim.x * blockIdx.x + threadIdx.x;
     T res_local = 0;
@@ -46,12 +46,32 @@ template <typename T>
 __host__ void comp_dist(uint blocksPerGrid, uint threadsPerBlock, T* dev_data, uint dim, 
         uint query, struct sort_t<T>* dev_sort)
 {
-    comp_dist<T><<<blocksPerGrid, threadsPerBlock>>>(dev_data, dim, query, dev_sort);
+    __comp_dist<T><<<blocksPerGrid, threadsPerBlock>>>(dev_data, dim, query, dev_sort);
     CUDA_ERR(cudaGetLastError());
 }
+
+
+// Overload
+template <typename T>
+void comp_dist(uint N_threads, T* dev_data, uint dim, uint query, 
+        struct sort_t<T>* dev_sort)
+{
+    int minGridSize, gridSize;
+    int blockSize;
+
+    cudaOccupancyMaxPotentialBlockSize(&minGridSize, &blockSize, (void*)__comp_dist<T>, 0, N_threads);
+
+    gridSize = (N_threads + blockSize - 1) / blockSize;
+
+    comp_dist<T>(gridSize, blockSize, dev_data, dim, query, dev_sort);
+}
+
 
 // explicit to compile template for float
 template void comp_dist<float>(uint blocksPerGrid, uint threadsPerBlock, float* dev_data, 
         uint dim, uint query, struct sort_t<float>* dev_sort);
+
+template void comp_dist<float>(uint N_threads, float* dev_data, uint dim, uint query, 
+        struct sort_t<float>* dev_sort);
 
 ////////////////////////////////////////////////////////////////////////////////////////

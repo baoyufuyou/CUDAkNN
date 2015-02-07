@@ -54,7 +54,9 @@ template <typename T>
 extern void comp_dist(uint blocksPerGrid, uint threadsPerBlock, T* dev_data, uint dim, 
         uint query, struct sort_t<T>* dev_sort);
 
-
+template <typename T>
+extern void comp_dist(uint N_threads, T* dev_data, uint dim, uint query, 
+        struct sort_t<T>* dev_sort);
 
 ////////////////////////////////////////////////////////////////////////////////////////
 

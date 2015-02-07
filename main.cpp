@@ -15,6 +15,7 @@
 #include "cpu_knn.hpp"
 #include "error.hpp"
 #include "utils.hpp"
+#include "parser.hpp"
 
 ////////////////////////////////////////////////////////////////////////////////////////
 
@@ -23,8 +24,6 @@ inline void print_data(uint dim, const std::vector<T>& data);
 
 inline void print_neighbors(const std::vector<uint>& neighbors);
 
-inline void print_info();
-
 ////////////////////////////////////////////////////////////////////////////////////////
 
 /**
@@ -32,14 +31,18 @@ inline void print_info();
  * */
 int main(int argc, char* argv[])
 {
-    uint n_points = (argc > 1 ? std::stoul(argv[1]) : 2); // number of points
-    uint dim = (argc > 2 ? std::stoul(argv[2]) : 1);      // number of dimentions of the space
-    uint k = (argc > 3 ? std::stoul(argv[3]) : 1);        // k neighbors to find
-    uint query = (argc > 4 ? std::stoul(argv[4]) : 0);    // index of the query
- 
-    std::vector<uint> neighbors; // final answer (k-nearest neighbors from query)
+    uint n_points; // number of points
+    uint dim;      // number of dimentions of the space
+    uint k;        // k neighbors to find
+    uint query;    // index of the query
+    
+    Parser parser(argc, argv);
+    parser.get_options(n_points, dim, k, query);
 
-    print_info();   // print program's info
+    std::cout << "Using: " << std::endl;
+    std::cout << "n_points: " << n_points <<  "| dim: " << dim << "| k: " << k << "| query: " << query << std::endl;
+
+    std::vector<uint> neighbors; // final answer (k-nearest neighbors from query)
 
     std::vector<float>& data = gen_random_data<float>(n_points, dim); // generates random data
 
@@ -115,23 +118,6 @@ inline void print_neighbors(const std::vector<uint>& neighbors)
     }
     
     std::cout << std::endl << std::endl;
-}
-
-////////////////////////////////////////////////////////////////////////////////////////
-
-inline void print_info()
-{
-    std::cout << 
-        "CUDA KNN - A simple implementation of k-nearest neighbors in CUDA "    << std::endl << 
-                                                                                   std::endl <<
-        "Usage: cudaknn [n_points] [dim] [k] [query]"                           << std::endl <<
-        "Options:"                                                              << std::endl <<
-        "   n_points: number of random points to generate"                      << std::endl <<
-        "   dim:      number of dimentions of each point"                       << std::endl << 
-        "   k:        number of nearest neighbors to find"                      << std::endl << 
-        "   query:    index of the query point (must be smaller than n_points)" << std::endl <<
-                                                                                   std::endl;
-
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////
