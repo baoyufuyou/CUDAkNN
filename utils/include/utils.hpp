@@ -55,7 +55,6 @@ static std::chrono::high_resolution_clock::time_point t1;
 #define TIME_BETWEEN(code) WARNING_ERROR("TIME_BETWEEN needs at least C++11 compliant compiler")
 #endif
 
-
 ////////////////////////////////////////////////////////////////////////////////////////
 
 template <typename T>

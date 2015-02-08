@@ -16,6 +16,8 @@
 #include <string>
 #include <cstdlib>
 
+#include "cuda_utils.hpp"
+
 ////////////////////////////////////////////////////////////////////////////////////////
 
 Parser::Parser(int argc, char* argv[])
@@ -62,6 +64,9 @@ void Parser::get_next_option(enum options_t& op, uint& q)
         q = std::stoul(option);
         op = SET_QUERY;
     }
+    else if(strcmp(option, "p") == 0) {
+        op = PRINT_CUDA_ENVIROMENT;
+    }
     else if(strcmp(option, "h") == 0) {
         op = PRINT_HELP;
     }
@@ -104,6 +109,9 @@ void Parser::get_options(uint& n_points, uint& dim, uint& k, uint& query)
                 break;
             case SET_QUERY:
                 query = opt_val;
+                break;
+            case PRINT_CUDA_ENVIROMENT:
+                CudaUtils::print_dev_info();
                 break;
             case PRINT_HELP:
                 print_help();
