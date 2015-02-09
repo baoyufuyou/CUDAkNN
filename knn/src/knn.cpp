@@ -14,11 +14,12 @@
 ////////////////////////////////////////////////////////////////////////////////////////
 
 template <typename T>
-inline void KNN<T>::reset(uint dim, std::vector<T>& data)
+inline void KNN<T>::reset(uint dim, T* data, size_t bytes_size)
 {
     _dim = dim;
     _data = data;
-    ASSERT_FATAL_ERROR((_data.size() % _dim) == 0, \
+    _bytes_size = bytes_size;
+    ASSERT_FATAL_ERROR((bytes_size % _dim) == 0, \
             "data size must devide number of dimentions");
 }
 

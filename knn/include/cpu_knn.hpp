@@ -22,7 +22,8 @@ template <typename T>
 class CPUKNN : public KNN<T>
 {
     public:
-        inline CPUKNN(uint dim, std::vector<T>& data) : KNN<T>(dim, data) {}
+        inline CPUKNN(uint dim, T* data, size_t bytes_size) 
+            : KNN<T>(dim, data, bytes_size) {}
 
         /**
          * Implementation of the method of the supper class KNN  

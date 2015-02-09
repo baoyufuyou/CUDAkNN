@@ -14,9 +14,11 @@
 
 ////////////////////////////////////////////////////////////////////////////////////////
 
+#include <cuda_runtime.h>
+
 #include "cuda_knn.hpp"
 
-#include <cuda_runtime.h>
+#include "error.hpp"
 
 ////////////////////////////////////////////////////////////////////////////////////////
 
@@ -24,12 +26,26 @@ template <typename T>
 class CUDAKNNNaive : public CUDAKNN<T>
 {
     public:
-        CUDAKNNNaive(uint dim, std::vector<T>& data);
+        inline CUDAKNNNaive(uint dim, T* data, size_t bytes_size, enum mem_scope_t ptr_scope) :
+            CUDAKNN<T>(dim, data, bytes_size, ptr_scope),
+            _dev_sort(this->_bytes_size / (this->_dim * sizeof(T))) {};
  
+        inline ~CUDAKNNNaive() { this->free(); }
+
         /**
          * implementation of the method of the supper class knn  
          * */
         void find(uint query, uint k, std::vector<uint>& knn);
+
+        /**
+         * Frees the memory alloc in the device
+         * */
+        inline void free() {
+            if(_dev_sort._key != NULL)
+                CUDA_ERR(cudaFree(_dev_sort._key));  _dev_sort._key = NULL;
+            if(_dev_sort._value != NULL)
+                CUDA_ERR(cudaFree(_dev_sort._value));_dev_sort._value = NULL;
+        }
 
         /**
          * Gets  
@@ -48,16 +64,6 @@ class CUDAKNNNaive : public CUDAKNN<T>
 ////////////////////////////////////////////////////////////////////////////////////////
 
 template class CUDAKNNNaive<float>;
-
-////////////////////////////////////////////////////////////////////////////////////////
-
-template <typename T>
-CUDAKNNNaive<T>::CUDAKNNNaive(uint dim, std::vector<T>& data)
-    :
-        CUDAKNN<T>(dim, data), _dev_sort(this->_data.size()/this->_dim)
-{
-    /* Nothing to do here */
-}
 
 ////////////////////////////////////////////////////////////////////////////////////////
 

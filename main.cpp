@@ -57,7 +57,7 @@ int main(int argc, char* argv[])
      * */
     std::cout << "=== CPU Implementation ===================================" << std::endl;
     TIME_BETWEEN(
-    CPUKNN<float> knn_cpu(dim, data); 
+    CPUKNN<float> knn_cpu(dim, data.data(), data.size() * sizeof(float)); 
 
     neighbors.clear();
     knn_cpu.find(query, k, neighbors);
@@ -73,10 +73,11 @@ int main(int argc, char* argv[])
      * */
     std::cout << "=== GPU Implementation Naive =============================" << std::endl;
     TIME_BETWEEN(
-    CUDAKNNNaive<float> knn_cuda_naive(dim, data);
+    CUDAKNNNaive<float> knn_cuda_naive(dim, data.data(), data.size() * sizeof(float), PTR_TO_HOST_MEM);
 
     neighbors.clear();
     knn_cuda_naive.find(query, k, neighbors);
+    knn_cuda_naive.free(); // Frees intermediate memory used for computations
     );
     print_neighbors(neighbors); // print found neighbors
     std::cout << "==========================================================" << std::endl << std::endl;
@@ -89,10 +90,12 @@ int main(int argc, char* argv[])
      * */
     std::cout << "=== GPU Implementation Thrust ============================" << std::endl;
     TIME_BETWEEN(
-    CUDAKNNThrust<float> knn_cuda_thrust(dim, data);
+    CUDAKNNThrust<float> knn_cuda_thrust(dim, knn_cuda_naive.data(),
+        knn_cuda_naive.bytes_size(), PTR_TO_DEVICE_MEM);
 
     neighbors.clear();
     knn_cuda_thrust.find(query, k, neighbors);
+    knn_cuda_thrust.free(); // Frees intermediate memory used for computations
     );
     print_neighbors(neighbors); // print found neighbors
     std::cout << "==========================================================" << std::endl << std::endl;

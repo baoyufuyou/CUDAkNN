@@ -26,7 +26,8 @@ class KNN
 {
     protected:
         uint _dim; // Number of dimentions of the data
-        std::vector<T>& _data; // Data
+        T* _data; // Data
+        size_t _bytes_size; // Size of the data
     
     public:
         /**
@@ -34,15 +35,17 @@ class KNN
          * @arg1: dimention of the space that the data is defined
          * @arg2: array of the data 
          * */
-        inline KNN(uint dim, std::vector<T>& data) : _dim(dim), _data(data) {
-            ASSERT_FATAL_ERROR((_data.size() % _dim) == 0, \
+            inline KNN(uint dim, T* data, size_t bytes_size) : 
+                _dim(dim), _data(data), _bytes_size(bytes_size) 
+            {
+                ASSERT_FATAL_ERROR((bytes_size % _dim) == 0, \
                     "data size must devide number of dimentions");
-        };
+            };
 
         /**
          * Resets the data and its dimention 
          * */
-        inline void reset(uint dim, std::vector<T>& data);
+        inline void reset(uint dim, T* data, size_t bytes_size);
 
         /**
          * Returns the k-nearest neighbors of query  
@@ -57,13 +60,15 @@ class KNN
         /**
          * Gets  
          * */
-        inline const std::vector<T>& data() const {return _data;}
+        inline T* data() const {return _data;}
+        inline size_t bytes_size() const {return _bytes_size;}
         inline uint dim() const {return _dim;}
 
         /**
          * Sets 
          * */
-        inline std::vector<T>& data() {return _data;}
+        inline T* data() {return _data;}
+        inline size_t& bytes_size() {return _bytes_size;}
         inline uint& dim() {return _dim;}
 };
 

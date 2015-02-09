@@ -21,7 +21,7 @@
 template <typename T>
 void CPUKNN<T>::find(uint query, uint k, std::vector<uint>& knn)
 {
-    uint dist_size = this->_data.size() / this->_dim; // number different elements in the _data vector
+    uint dist_size = this->_bytes_size / (this->_dim * sizeof(T)); // number different elements in the _data vector
     std::vector<std::pair<T, uint>> dist(dist_size); // distance vector
 
     knn.clear(); knn.resize(k); // vector will have k indices of the k-nearest neighbors
