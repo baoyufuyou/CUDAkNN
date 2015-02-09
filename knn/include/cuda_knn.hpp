@@ -21,6 +21,21 @@
 ////////////////////////////////////////////////////////////////////////////////////////
 
 template <typename T>
+struct sort_t 
+{
+    inline sort_t(uint nKeys)
+    {
+        CUDA_ERR(cudaMalloc((void**)&_key, sizeof(T)*nKeys));
+        CUDA_ERR(cudaMalloc((void**)&_value, sizeof(uint)*nKeys));
+    }
+
+    T* _key;
+    uint* _value;
+};
+
+////////////////////////////////////////////////////////////////////////////////////////
+
+template <typename T>
 class CUDAKNN : public KNN<T>
 {
     public:

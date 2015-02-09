@@ -1,33 +1,35 @@
 /*
  * =====================================================================================
- *       Filename:  cuda_knn_naive.hpp
+ *       Filename:  cuda_knn_thrust.hpp
  *    Description:  
- *        Created:  2015-02-02 21:04
+ *        Created:  2015-02-09 10:26
  *         Author:  Tiago Lobato Gimenes        (tlgimenes@gmail.com)
  * =====================================================================================
  */
 
 ////////////////////////////////////////////////////////////////////////////////////////
 
-#ifndef CUDA_KNN_NAIVE_HPP
-#define CUDA_KNN_NAIVE_HPP
+#ifndef CUDA_KNN_THRUST_HPP
+#define CUDA_KNN_THRUST_HPP
 
 ////////////////////////////////////////////////////////////////////////////////////////
 
-#include "cuda_knn.hpp"
+#include <thrust/device_ptr.h>
 
-#include <cuda_runtime.h>
+#include "cuda_knn.hpp"
+#include "error.hpp"
 
 ////////////////////////////////////////////////////////////////////////////////////////
 
 template <typename T>
-class CUDAKNNNaive : public CUDAKNN<T>
+class CUDAKNNThrust : public CUDAKNN<T>
 {
     public:
-        CUDAKNNNaive(uint dim, std::vector<T>& data);
+        inline CUDAKNNThrust(uint dim, std::vector<T>& data) : 
+            CUDAKNN<T>(dim, data), _dev_sort(this->_data.size() / this->_dim) {};
  
         /**
-         * implementation of the method of the supper class knn  
+         * Implementation of the method of the supper class KNN  
          * */
         void find(uint query, uint k, std::vector<uint>& knn);
 
@@ -40,28 +42,18 @@ class CUDAKNNNaive : public CUDAKNN<T>
          * Sets  
          * */
         inline struct sort_t<T>& dev_sort() {return _dev_sort;}
-    
+
     protected:
-        struct sort_t<T> _dev_sort; // Array on device for sorting
+        struct sort_t<T> _dev_sort;
 };
 
 ////////////////////////////////////////////////////////////////////////////////////////
 
-template class CUDAKNNNaive<float>;
+template class CUDAKNNThrust<float>;
 
 ////////////////////////////////////////////////////////////////////////////////////////
 
-template <typename T>
-CUDAKNNNaive<T>::CUDAKNNNaive(uint dim, std::vector<T>& data)
-    :
-        CUDAKNN<T>(dim, data), _dev_sort(this->_data.size()/this->_dim)
-{
-    /* Nothing to do here */
-}
-
-////////////////////////////////////////////////////////////////////////////////////////
-
-#endif /* !CUDA_KNN_NAIVE_HPP */
+#endif /* !CUDA_KNN_THRUST_HPP */
 
 ////////////////////////////////////////////////////////////////////////////////////////
 
