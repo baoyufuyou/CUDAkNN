@@ -11,7 +11,7 @@ Install
 This software is Linux supported only, but it might works in Windows as well
 
 *Dependencies*
-- CUDA 6.0
+- CUDA 6.5 
 - GNU Make 4.1
 - Git 2.2.2
 
@@ -33,8 +33,8 @@ Congratulations ! You are done !
 
 TODO
 -------------
-- Implement a naive k-nearest neighbors in CUDA
-- Implement a static kd-tree in CUDA
-- Implement kNN using the kd-tree in CUDA
-- Implement real time parallel kd-tree in CUDA
-- Implement kNN using the dynamic real-time kd-tree in CUDA
+- [x] Implement a naive k-nearest neighbors in CUDA
+- [ ] Implement a static kd-tree in CUDA
+- [ ] Implement kNN using the kd-tree in CUDA
+- [ ] Implement real time parallel kd-tree in CUDA
+- [ ] Implement kNN using the dynamic real-time kd-tree in CUDA
