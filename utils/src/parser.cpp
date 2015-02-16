@@ -37,7 +37,7 @@ inline void Parser::print_help() const
 
 ////////////////////////////////////////////////////////////////////////////////////////
 
-void Parser::get_next_option(enum options_t& op, uint& q)
+void Parser::get_next_option(enum options_t& op, int& q)
 {
     char option[MAX_INPUT_SIZE];
 
@@ -80,10 +80,10 @@ void Parser::get_next_option(enum options_t& op, uint& q)
 
 ////////////////////////////////////////////////////////////////////////////////////////
 
-void Parser::get_options(uint& n_points, uint& dim, uint& k, uint& query)
+void Parser::get_options(int& n_points, int& dim, int& k, int& query)
 {
     enum options_t opt;
-    uint opt_val;
+    int opt_val;
 
     // Default values
     n_points = 10;

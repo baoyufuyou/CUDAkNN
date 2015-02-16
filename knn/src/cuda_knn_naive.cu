@@ -17,57 +17,21 @@
 
 ////////////////////////////////////////////////////////////////////////////////////////
 
-/*
- * @arg0: raw data in the device
- * @arg1: space dimentions
- * @arg2: DIRECT index of the query in the raw data
- * @arg3: return array containing distances from each data to query 
- * */
 template <typename T>
-__global__ void __comp_dist(T* dev_data, uint dim, uint query, struct sort_t<T> dev_sort)
+__host__ void CUDAKNNNaive<T>::find(int query, int k, std::vector<int>& knn)
 {
-    uint k = blockDim.x * blockIdx.x + threadIdx.x;
-    T res_local = 0;
-    T res_query_local = 0;
-    T res_index_local = 0;
-
-    uint index = k * dim;
-
-    dev_sort._value[k] = k;
-    
-    for(uint i=0; i < dim; i++)
-    {
-        res_query_local = dev_data[query + i];
-        res_index_local = dev_data[index + i];
-        res_local += (res_query_local - res_index_local) * (res_query_local - res_index_local);
-    }
-
-    dev_sort._key[k] = res_local;
-}
-
-
-////////////////////////////////////////////////////////////////////////////////////////
-
-template <typename T>
-__host__ void CUDAKNNNaive<T>::find(uint query, uint k, std::vector<uint>& knn)
-{
-    int N_threads = this->_bytes_size / (this->_dim * sizeof(float));
-    int threadsPerBlock, minGridSize;
-    int blocksPerGrid;
-
-    cudaOccupancyMaxPotentialBlockSize(&minGridSize, &threadsPerBlock, 
-            (void*)__comp_dist<T>, 0, N_threads);
-
-    blocksPerGrid = (N_threads + threadsPerBlock - 1) / threadsPerBlock;
+    int N_threads = this->_bytes_size / (this->_dim * sizeof(T));
+    int blockPerGrid, threadsPerBlock;
 
     query = query * this->_dim;
 
-    __comp_dist<T><<<blocksPerGrid, threadsPerBlock>>>(this->_data, this->_dim, query, 
-            this->_dev_sort);
-    CUDA_ERR(cudaGetLastError());
-
+    get_dim_comp_dist<T>(N_threads, blockPerGrid, threadsPerBlock);
+    comp_dist<T>(blockPerGrid, threadsPerBlock, this->_data, this->_dim, query, 
+            this->_dev_sort, this->_bytes_size);
+        
     knn.resize(k);
-    CUDA_ERR(cudaMemcpy(knn.data(), this->_dev_sort._value, k*sizeof(uint), cudaMemcpyDeviceToHost));
+    CUDA_ERR(cudaMemcpy(knn.data(), this->_dev_sort._value, k*sizeof(int), 
+                cudaMemcpyDeviceToHost));
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////

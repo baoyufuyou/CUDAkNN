@@ -26,7 +26,7 @@ template <typename T>
 class CUDAKNNNaive : public CUDAKNN<T>
 {
     public:
-        inline CUDAKNNNaive(uint dim, T* data, size_t bytes_size, enum mem_scope_t ptr_scope) :
+        inline CUDAKNNNaive(int dim, T* data, size_t bytes_size, enum mem_scope_t ptr_scope) :
             CUDAKNN<T>(dim, data, bytes_size, ptr_scope),
             _dev_sort(this->_bytes_size / (this->_dim * sizeof(T))) {};
  
@@ -35,7 +35,7 @@ class CUDAKNNNaive : public CUDAKNN<T>
         /**
          * implementation of the method of the supper class knn  
          * */
-        void find(uint query, uint k, std::vector<uint>& knn);
+        void find(int query, int k, std::vector<int>& knn);
 
         /**
          * Frees the memory alloc in the device

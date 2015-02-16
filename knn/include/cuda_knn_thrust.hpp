@@ -23,7 +23,7 @@ template <typename T>
 class CUDAKNNThrust : public CUDAKNN<T>
 {
     public:
-        inline CUDAKNNThrust(uint dim, T* data, size_t bytes_size, enum mem_scope_t ptr_scope) : 
+        inline CUDAKNNThrust(int dim, T* data, size_t bytes_size, enum mem_scope_t ptr_scope) : 
             CUDAKNN<T>(dim, data, bytes_size, ptr_scope), 
             _dev_sort(this->_bytes_size / (this->_dim * sizeof(T))) {};
  
@@ -32,7 +32,7 @@ class CUDAKNNThrust : public CUDAKNN<T>
         /**
          * Implementation of the method of the supper class KNN  
          * */
-        void find(uint query, uint k, std::vector<uint>& knn);
+        void find(int query, int k, std::vector<int>& knn);
 
         /**
          * Frees the memory alloc in the device

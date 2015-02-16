@@ -60,7 +60,7 @@ class Parser
         std::stringstream _argv; // main's argv
 
     protected:
-        void get_next_option(enum options_t&, uint&);
+        void get_next_option(enum options_t&, int&);
 
         inline void print_help() const;
 
@@ -71,10 +71,10 @@ class Parser
          * Get the program options from the argv. If you want to add any new
          * parameter for the program, add this parameter here !
          * */
-        void get_options(uint& n_points, 
-                         uint& dim,
-                         uint& k,
-                         uint& query);
+        void get_options(int& n_points, 
+                         int& dim,
+                         int& k,
+                         int& query);
 
         /* 
          * Gets 

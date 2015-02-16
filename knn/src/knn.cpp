@@ -14,7 +14,7 @@
 ////////////////////////////////////////////////////////////////////////////////////////
 
 template <typename T>
-inline void KNN<T>::reset(uint dim, T* data, size_t bytes_size)
+inline void KNN<T>::reset(int dim, T* data, size_t bytes_size)
 {
     _dim = dim;
     _data = data;
@@ -26,7 +26,7 @@ inline void KNN<T>::reset(uint dim, T* data, size_t bytes_size)
 ////////////////////////////////////////////////////////////////////////////////////////
 
 template <typename T>
-void KNN<T>::find(uint query, uint k, std::vector<uint>& knn)
+void KNN<T>::find(int query, int k, std::vector<int>& knn)
 {
     FATAL_ERROR("Cannot find from raw knn");
 }

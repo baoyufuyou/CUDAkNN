@@ -25,7 +25,7 @@ template <typename T>
 class KNN 
 {
     protected:
-        uint _dim; // Number of dimentions of the data
+        int _dim; // Number of dimentions of the data
         T* _data; // Data
         size_t _bytes_size; // Size of the data
     
@@ -35,7 +35,7 @@ class KNN
          * @arg1: dimention of the space that the data is defined
          * @arg2: array of the data 
          * */
-            inline KNN(uint dim, T* data, size_t bytes_size) : 
+            inline KNN(int dim, T* data, size_t bytes_size) : 
                 _dim(dim), _data(data), _bytes_size(bytes_size) 
             {
                 ASSERT_FATAL_ERROR((bytes_size % _dim) == 0, \
@@ -45,7 +45,7 @@ class KNN
         /**
          * Resets the data and its dimention 
          * */
-        inline void reset(uint dim, T* data, size_t bytes_size);
+        inline void reset(int dim, T* data, size_t bytes_size);
 
         /**
          * Returns the k-nearest neighbors of query  
@@ -55,21 +55,21 @@ class KNN
          * WARNING: the query index is not _data[query] but 
          * _data[query * dim], as well as for the return vector
          * */
-        virtual void find(uint query, uint k, std::vector<uint>& knn);
+        virtual void find(int query, int k, std::vector<int>& knn);
 
         /**
          * Gets  
          * */
         inline T* data() const {return _data;}
         inline size_t bytes_size() const {return _bytes_size;}
-        inline uint dim() const {return _dim;}
+        inline int dim() const {return _dim;}
 
         /**
          * Sets 
          * */
         inline T* data() {return _data;}
         inline size_t& bytes_size() {return _bytes_size;}
-        inline uint& dim() {return _dim;}
+        inline int& dim() {return _dim;}
 };
 
 ////////////////////////////////////////////////////////////////////////////////////////

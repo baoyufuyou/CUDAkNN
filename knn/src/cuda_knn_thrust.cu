@@ -18,23 +18,28 @@
 ////////////////////////////////////////////////////////////////////////////////////////
 
 template <typename T>
-void CUDAKNNThrust<T>::find(uint query, uint k, std::vector<uint>& knn)
+void CUDAKNNThrust<T>::find(int query, int k, std::vector<int>& knn)
 {
-    int blockPerGrid, threadsPerBlock;
     int N_threads = this->_bytes_size / (this->_dim * sizeof(T));
+    //int N_threads = this->_bytes_size / sizeof(T);
+    int blockPerGrid, threadsPerBlock;
 
     query = query * this->_dim;
 
     get_dim_comp_dist<T>(N_threads, blockPerGrid, threadsPerBlock);
     comp_dist<T>(blockPerGrid, threadsPerBlock, this->_data, this->_dim, query, 
-            this->_dev_sort);
+            this->_dev_sort, this->_bytes_size);
+    //get_dim_comp_dist_opt<T>(N_threads, blockPerGrid, threadsPerBlock);
+    //comp_dist_opt<T>(blockPerGrid, threadsPerBlock, this->_data, this->_dim, query,
+    //        this->_dev_sort);
     
     thrust::device_ptr<T> key(this->_dev_sort._key);
-    thrust::device_ptr<uint> value(this->_dev_sort._value);
-    thrust::sort_by_key(key, key + N_threads, value);
+    thrust::device_ptr<int> value(this->_dev_sort._value);
+    //thrust::sort_by_key(key, key + N_threads/this->_dim, value); // OPT !
+    thrust::sort_by_key(key, key + N_threads, value); // OPT !
     
     knn.resize(k);
-    CUDA_ERR(cudaMemcpy(knn.data(), this->_dev_sort._value + 1, k*sizeof(uint), 
+    CUDA_ERR(cudaMemcpy(knn.data(), this->_dev_sort._value + 1, k*sizeof(int), 
                 cudaMemcpyDeviceToHost));
 
     return;

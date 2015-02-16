@@ -21,12 +21,12 @@
 ////////////////////////////////////////////////////////////////////////////////////////
 
 template <typename T>
-inline void print_data(uint dim, const std::vector<T>& data);
+inline void print_data(int dim, const std::vector<T>& data);
 
-inline void print_neighbors(const std::vector<uint>& neighbors);
+inline void print_neighbors(const std::vector<int>& neighbors);
 
 template <typename T>
-inline void print_keys(const T* keys, uint size);
+inline void print_keys(const T* keys, int size);
 
 ////////////////////////////////////////////////////////////////////////////////////////
 
@@ -35,10 +35,10 @@ inline void print_keys(const T* keys, uint size);
  * */
 int main(int argc, char* argv[])
 {
-    uint n_points; // number of points
-    uint dim;      // number of dimentions of the space
-    uint k;        // k neighbors to find
-    uint query;    // index of the query
+    int n_points; // number of points
+    int dim;      // number of dimentions of the space
+    int k;        // k neighbors to find
+    int query;    // index of the query
     
     Parser parser(argc, argv);
     parser.get_options(n_points, dim, k, query);
@@ -46,7 +46,7 @@ int main(int argc, char* argv[])
     std::cout << "Using: " << std::endl;
     std::cout << "n_points: " << n_points <<  "| dim: " << dim << "| k: " << k << "| query: " << query << std::endl;
 
-    std::vector<uint> neighbors; // final answer (k-nearest neighbors from query)
+    std::vector<int> neighbors; // final answer (k-nearest neighbors from query)
 
     std::vector<float>& data = gen_random_data<float>(n_points, dim); // generates random data
 
@@ -109,14 +109,14 @@ int main(int argc, char* argv[])
 ////////////////////////////////////////////////////////////////////////////////////////
 
 template <typename T>
-inline void print_data(uint dim, const std::vector<T>& data)
+inline void print_data(int dim, const std::vector<T>& data)
 {
     std::cout << std::endl << "Data:" << std::endl;
     
-    for(uint i=0; i < data.size() && i < 20; i+=dim)
+    for(int i=0; i < data.size() && i < 20; i+=dim)
     {
         std::cout << "(";
-        for(uint j=0; j < dim-1; j++)
+        for(int j=0; j < dim-1; j++)
         {
             std::cout << data[i+j] << ",";
         }
@@ -130,12 +130,12 @@ inline void print_data(uint dim, const std::vector<T>& data)
 
 ////////////////////////////////////////////////////////////////////////////////////////
 
-inline void print_neighbors(const std::vector<uint>& neighbors)
+inline void print_neighbors(const std::vector<int>& neighbors)
 { 
     std::cout << "Neighbors:" << std::endl;
 
     if(neighbors.size() > 0){
-        for(uint i=0; i < neighbors.size()-1 && i < 20; i++)
+        for(int i=0; i < neighbors.size()-1 /*&& i < 20*/; i++)
             std::cout << neighbors[i] << ",";
         std::cout << neighbors[neighbors.size()-1];
 
@@ -149,13 +149,13 @@ inline void print_neighbors(const std::vector<uint>& neighbors)
 ////////////////////////////////////////////////////////////////////////////////////////
 
 template <typename T>
-inline void print_keys(const T* keys, uint size)
+inline void print_keys(const T* keys, int size)
 {
     T* keys_host = new T[size];
 
     CUDA_ERR(cudaMemcpy(keys_host, keys, sizeof(T)*size, cudaMemcpyDeviceToHost));
 
-    for(uint i=0; i < size-1 && i < 20; i++)
+    for(int i=0; i < size-1 && i < 20; i++)
     {
         std::cout << keys_host[i] << ",";
     }
