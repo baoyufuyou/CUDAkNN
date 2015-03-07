@@ -18,20 +18,21 @@
 ////////////////////////////////////////////////////////////////////////////////////////
 
 template <typename T>
-void CUDAKNNNaive<T>::find(uint query, uint k, std::vector<uint>& knn)
+__host__ void CUDAKNNNaive<T>::find(int query, int k, std::vector<int>& knn)
 {
-    uint N_threads = this->_data.size() / this->_dim;
-    uint threadsPerBlock = 256;
-    uint blocksPerGrid = (N_threads + threadsPerBlock - 1) / threadsPerBlock;
+    int N_threads = this->_bytes_size / (this->_dim * sizeof(T));
+    int blockPerGrid, threadsPerBlock;
 
     query = query * this->_dim;
 
- //   comp_dist<float>(blocksPerGrid, threadsPerBlock, this->_dev_data, 
- //           this->_dim, query, this->_dev_sort);
-    comp_dist<T>(N_threads, this->_dev_data, this->_dim, query, this->_dev_sort);
-
+    get_dim_comp_dist<T>(N_threads, blockPerGrid, threadsPerBlock);
+    comp_dist<T>(blockPerGrid, threadsPerBlock, this->_data, this->_dim, query, 
+            this->_dev_sort, this->_bytes_size);
+        
+    knn.resize(k);
+    CUDA_ERR(cudaMemcpy(knn.data(), this->_dev_sort._value, k*sizeof(int), 
+                cudaMemcpyDeviceToHost));
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////
-
 

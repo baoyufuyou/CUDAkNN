@@ -5,7 +5,7 @@
 #
 
 CC=nvcc					# Compiler
-C_FLAGS=-g -std=c++11	# C-Compiler flags
+C_FLAGS=-g -std=c++11 -O0# C-Compiler flags
 C_NV_FLAGS=-g			# CUDA 6.5 does not support C++11 :(
 NV_FLAGS=-G				# Nvidia compiler flags
 

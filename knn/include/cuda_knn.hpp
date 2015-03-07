@@ -14,9 +14,34 @@
 
 ////////////////////////////////////////////////////////////////////////////////////////
 
-#include "knn.hpp"
-
 #include <cuda_runtime.h>
+
+#include "knn.hpp"
+#include "error.hpp"
+
+////////////////////////////////////////////////////////////////////////////////////////
+
+enum mem_scope_t
+{
+    PTR_TO_HOST_MEM,
+    PTR_TO_DEVICE_MEM
+};
+
+////////////////////////////////////////////////////////////////////////////////////////
+
+template <typename T>
+struct sort_t 
+{
+    inline sort_t(int nKeys) :
+        _key(NULL), _value(NULL)
+    {
+        CUDA_ERR(cudaMalloc((void**)&this->_key, sizeof(T)*nKeys));
+        CUDA_ERR(cudaMalloc((void**)&this->_value, sizeof(int)*nKeys));
+    }
+
+    T* _key;
+    int* _value;
+};
 
 ////////////////////////////////////////////////////////////////////////////////////////
 
@@ -24,12 +49,25 @@ template <typename T>
 class CUDAKNN : public KNN<T>
 {
     public:
-        CUDAKNN(uint dim, std::vector<T>& data);
-        CUDAKNN(uint dim, uint data_size_byte, T* _dev_data);
+        inline CUDAKNN(int dim, T* data, size_t bytes_size, enum mem_scope_t ptr_scope) 
+            : KNN<T>(dim, data, bytes_size), _ptr_scope(ptr_scope)
+        {
+            if(_ptr_scope == PTR_TO_HOST_MEM)
+            {
+                CUDA_ERR(cudaMalloc((void**)&this->_data, this->_bytes_size));
+                CUDA_ERR(cudaMemcpy(this->_data, data, this->_bytes_size, cudaMemcpyHostToDevice));
+            }
+        }
+
+        inline ~CUDAKNN() 
+        {
+            if(_ptr_scope == PTR_TO_HOST_MEM) {
+                CUDA_ERR(cudaFree(this->_data));
+            }
+        }
 
     protected:
-        T* _dev_data; // data vector in device memory;
-        uint _data_size_byte; // size of data in bytes loaded into device
+        enum mem_scope_t _ptr_scope;
 };
 
 ////////////////////////////////////////////////////////////////////////////////////////
@@ -37,32 +75,26 @@ class CUDAKNN : public KNN<T>
 template class CUDAKNN<float>;
 
 ////////////////////////////////////////////////////////////////////////////////////////
+// Kernel Wrapper
+/**
+ * Number of threads must be equal to the number of points 
+ * */
+template <typename T>
+extern void comp_dist(int blockPerGrid, int threadsPerBlock, T* dev_data, int dim, 
+        int query, struct sort_t<T> dev_sort, int dev_data_bytes_size);
+
+/**
+ * Number of threads must be equal to the number of points * dim
+ * */
+template <typename T>
+__host__ void comp_dist_opt(int blockPerGrid, int threadsPerBlock, T* dev_data, int dim, 
+        int query, struct sort_t<T> dev_sort, int dev_data_bytes_size);
 
 template <typename T>
-CUDAKNN<T>::CUDAKNN(uint dim, std::vector<T>& data)
-    :
-        KNN<T>(dim, data),
-        _dev_data(NULL)
-{
-    T* host_data = this->_data.data();
-
-    _data_size_byte = this->_data.size() * sizeof(T);
-
-    CUDA_ERR(cudaMalloc((void**)&_dev_data, _data_size_byte));
-    CUDA_ERR(cudaMemcpy(_dev_data, host_data, _data_size_byte, cudaMemcpyHostToDevice));
-}
-
-////////////////////////////////////////////////////////////////////////////////////////
+extern void get_dim_comp_dist(int N_threads, int &blockPerGrid, int &threadsPerBlock);
 
 template <typename T>
-CUDAKNN<T>::CUDAKNN(uint dim, uint data_size_byte, T* dev_data)
-    :
-        KNN<T>(dim, *(new std::vector<T>(0))),
-        _dev_data(dev_data),
-        _data_size_byte(data_size_byte)
-{
-    /* Nothing to do here */
-}
+__host__ void get_dim_comp_dist_opt(int N_threads, int &blocksPerGrid, int &threadsPerBlock);
 
 ////////////////////////////////////////////////////////////////////////////////////////
 

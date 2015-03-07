@@ -22,17 +22,18 @@ template <typename T>
 class CPUKNN : public KNN<T>
 {
     public:
-        inline CPUKNN(uint dim, std::vector<T>& data) : KNN<T>(dim, data) {}
+        inline CPUKNN(int dim, T* data, size_t bytes_size) 
+            : KNN<T>(dim, data, bytes_size) {}
 
         /**
          * Implementation of the method of the supper class KNN  
          * */
-        void find(uint query, uint k, std::vector<uint>& knn);
+        void find(int query, int k, std::vector<int>& knn);
 
         /**
          * Compares a pair based on the first element
          * */
-        inline static bool cmp_pair(const std::pair<T, uint> i, const std::pair<T, uint> j) 
+        inline static bool cmp_pair(const std::pair<T, int> i, const std::pair<T, int> j) 
         {
             return (i.first < j.first);
         }
@@ -42,7 +43,7 @@ class CPUKNN : public KNN<T>
          * Evaluates the squared distance between a and b in the _data
          * using the norm 2
          * */
-        T norm2_squared_dist(uint a, uint b);
+        T norm2_squared_dist(int a, int b);
 };
 
 ////////////////////////////////////////////////////////////////////////////////////////

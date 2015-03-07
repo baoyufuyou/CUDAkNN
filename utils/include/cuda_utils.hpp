@@ -1,35 +1,32 @@
 /*
  * =====================================================================================
- *       Filename:  knn.cpp
+ *       Filename:  cuda_utils.hpp
  *    Description:  
- *        Created:  2015-02-02 12:13
+ *        Created:  2015-02-08 15:36
  *         Author:  Tiago Lobato Gimenes        (tlgimenes@gmail.com)
  * =====================================================================================
  */
 
 ////////////////////////////////////////////////////////////////////////////////////////
 
-#include "knn.hpp"
+#ifndef CUDA_UTILS_HPP
+#define CUDA_UTILS_HPP
 
 ////////////////////////////////////////////////////////////////////////////////////////
 
-template <typename T>
-inline void KNN<T>::reset(int dim, T* data, size_t bytes_size)
+class CudaUtils
 {
-    _dim = dim;
-    _data = data;
-    _bytes_size = bytes_size;
-    ASSERT_FATAL_ERROR((bytes_size % _dim) == 0, \
-            "data size must devide number of dimentions");
-}
+    public:
+        static int get_dev_free_mem();
+        static int get_dev_total_mem();
+        static int get_dev_count();
+
+        static void print_dev_info();
+};
 
 ////////////////////////////////////////////////////////////////////////////////////////
 
-template <typename T>
-void KNN<T>::find(int query, int k, std::vector<int>& knn)
-{
-    FATAL_ERROR("Cannot find from raw knn");
-}
+#endif /* !CUDA_UTILS_HPP */
 
 ////////////////////////////////////////////////////////////////////////////////////////
 

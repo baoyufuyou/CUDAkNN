@@ -30,6 +30,7 @@ Options: \n\
   -d: Number of dimentions of each point \n\
   -k: Number of nearest neighbors to find \n\
   -q: Index of the query point (must be smaller than n_points) \n\
+  -p: Print information about CUDA enviroment \n\
   -h: Display this information \n\
 \n\
 CUDA KNN - A simple implementation of k-nearest neighbors in CUDA\n\
@@ -45,6 +46,7 @@ enum options_t
     SET_POINTS_DIM,
     SET_K,
     SET_QUERY,
+    PRINT_CUDA_ENVIROMENT,
     PRINT_HELP,
     EOF_STRING,
     UNDEFINED_OPTION
@@ -58,7 +60,7 @@ class Parser
         std::stringstream _argv; // main's argv
 
     protected:
-        void get_next_option(enum options_t&, uint&);
+        void get_next_option(enum options_t&, int&);
 
         inline void print_help() const;
 
@@ -69,10 +71,10 @@ class Parser
          * Get the program options from the argv. If you want to add any new
          * parameter for the program, add this parameter here !
          * */
-        void get_options(uint& n_points, 
-                         uint& dim,
-                         uint& k,
-                         uint& query);
+        void get_options(int& n_points, 
+                         int& dim,
+                         int& k,
+                         int& query);
 
         /* 
          * Gets 
