@@ -87,14 +87,11 @@ extern void comp_dist(int blockPerGrid, int threadsPerBlock, T* dev_data, int di
  * Number of threads must be equal to the number of points * dim
  * */
 template <typename T>
-__host__ void comp_dist_opt(int blockPerGrid, int threadsPerBlock, T* dev_data, int dim, 
-        int query, struct sort_t<T> dev_sort, int dev_data_bytes_size);
+__host__ void comp_dist_opt(T* dev_data, int dim, int query, struct sort_t<T> dev_sort, 
+        int dev_data_bytes_size);
 
 template <typename T>
 extern void get_dim_comp_dist(int N_threads, int &blockPerGrid, int &threadsPerBlock);
-
-template <typename T>
-__host__ void get_dim_comp_dist_opt(int N_threads, int &blocksPerGrid, int &threadsPerBlock);
 
 ////////////////////////////////////////////////////////////////////////////////////////
 

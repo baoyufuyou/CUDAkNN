@@ -92,26 +92,35 @@ __global__ void __comp_dist_opt(T* dev_data, int dim, int query, struct sort_t<T
     res_shared = 0;
 
     __syncthreads(); // res_shared must be equaly zero to all threads
-        
-    int index = k;
 
-    res_query_local = dev_data[query + threadIdx.x];
-    res_index_local = dev_data[k];
+    int index = k / dim;
 
-    atomicAdd(&res_shared, (res_query_local - res_index_local) * (res_query_local - res_index_local));
+    if(k < dev_data_bytes_size / sizeof(T) && query + threadIdx.x < dev_data_bytes_size / sizeof(T))
+    {
+        res_query_local = dev_data[query + threadIdx.x];
+        res_index_local = dev_data[k];
 
-    if(threadIdx.x == 0) {
-        dev_sort._value[index] = index;
-        dev_sort._key[index] = res_shared;
+        atomicAdd(&res_shared, (res_query_local - res_index_local) * (res_query_local - res_index_local));
+
+        __syncthreads(); // res_shared must be equaly zero to all threads 
+
+        if(threadIdx.x == 0) {
+            dev_sort._value[index] = index;
+            dev_sort._key[index] = res_shared;
+        }
     }
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////
 
 template <typename T>
-__host__ void comp_dist_opt(int blockPerGrid, int threadsPerBlock, T* dev_data, int dim, 
-        int query, struct sort_t<T> dev_sort, int dev_data_bytes_size)
+__host__ void comp_dist_opt(T* dev_data, int dim, int query, struct sort_t<T> dev_sort, 
+        int dev_data_bytes_size)
 {
+    int N_threads = dev_data_bytes_size/sizeof(T);
+    int threadsPerBlock = dim;
+    int blockPerGrid = (N_threads + threadsPerBlock -1) / threadsPerBlock;
+
     __comp_dist_opt<T><<<blockPerGrid, threadsPerBlock>>>(dev_data, dim, query, dev_sort, 
             dev_data_bytes_size);
     CUDA_ERR(cudaGetLastError());
@@ -119,21 +128,7 @@ __host__ void comp_dist_opt(int blockPerGrid, int threadsPerBlock, T* dev_data, 
 
 ////////////////////////////////////////////////////////////////////////////////////////
 
-template <typename T>
-__host__ void get_dim_comp_dist_opt(int N_threads, int &blocksPerGrid, int &threadsPerBlock)
-{
-    int minGridSize;
-
-    cudaOccupancyMaxPotentialBlockSize(&minGridSize, &threadsPerBlock, 
-            (void*)__comp_dist_opt<T>, 0, N_threads);
-
-    blocksPerGrid = (N_threads + threadsPerBlock - 1) / threadsPerBlock;
-}
-
-////////////////////////////////////////////////////////////////////////////////////////
-
-template void comp_dist_opt<float>(int, int, float*, int, int, struct sort_t<float>, int);
-template void get_dim_comp_dist_opt<float>(int, int&, int&);
+template void comp_dist_opt<float>(float*, int, int, struct sort_t<float>, int);
 
 ////////////////////////////////////////////////////////////////////////////////////////
 
