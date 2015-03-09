@@ -1,0 +1,5 @@
+\select@language {french}
+\contentsline {figure}{\numberline {2.1}{\ignorespaces Repr\IeC {\'e}sentation du 3-KNN.\relax }}{1}{figure.caption.3}
+\contentsline {figure}{\numberline {4.2}{\ignorespaces Repr\IeC {\'e}sentation de la logique derri\IeC {\`e}re le tri bitonique.\relax }}{2}{figure.caption.4}
+\contentsline {figure}{\numberline {4.3}{\ignorespaces R\IeC {\'e}seau de tri du tri bitonique.\relax }}{2}{figure.caption.5}
+\contentsline {figure}{\numberline {5.4}{\ignorespaces Comparaison de temps d'execution sur un \emph {Core i7 4700MQ - GTX850}.\relax }}{3}{figure.caption.6}
