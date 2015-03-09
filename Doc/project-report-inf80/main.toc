@@ -1,9 +1,0 @@
-\select@language {french}
-\contentsline {section}{\numberline {1}Introduction}{1}{section.1}
-\contentsline {section}{\numberline {2}Pr\IeC {\'e}liminaires}{1}{section.2}
-\contentsline {section}{\numberline {3}Premi\IeC {\`e}re Solution: Solution CPU - Quicksort}{1}{section.3}
-\contentsline {section}{\numberline {4}Deuxi\IeC {\`e}me Solution: Parall\IeC {\'e}lisme Na\IeC {\"\i }f}{2}{section.4}
-\contentsline {section}{\numberline {5}Troisi\IeC {\`e}me Solution: Parall\IeC {\'e}lisme Efficace}{3}{section.5}
-\contentsline {section}{\numberline {6}Conclusion}{3}{section.6}
-\contentsline {section}{\numberline {7}Code}{4}{section.7}
-\contentsline {section}{\numberline {8}Bibliographic References}{4}{section.8}
